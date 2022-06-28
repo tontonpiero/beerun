@@ -7,11 +7,11 @@ namespace BeeRun
 {
     public class PlayerInput : MonoBehaviour
     {
+        [SerializeField] private float horizontalFactor = 8f;
+        [SerializeField] private float verticalFactor = 14f;
+
         private PlayerController controller;
         private Vector3 origin;
-
-        private float horizontalFactor = 6f;
-        private float verticalFactor = 8f;
 
         private void Awake()
         {

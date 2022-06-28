@@ -10,18 +10,30 @@ namespace BeeRun
 
         [SerializeField] private AudioLibrary library;
 
-        private float _MusicGlobalVolume = 1f;
+        private const string SFXVolumeKey = "_sfx_volume_";
+        private const string MusicVolumeKey = "_music_volume_";
+        private float musicGlobalVolume = 0.5f;
+        private float sfxGlobalVolume = 0.5f;
 
         private AudioSource musicSource;
 
-        public float SFXGlobalVolume { get; set; } = 1f;
-        public float MusicGlobalVolume
+        public float SFXGlobalVolume
         {
-            get => _MusicGlobalVolume;
+            get => sfxGlobalVolume;
             set
             {
-                _MusicGlobalVolume = value;
-                musicSource.volume = _MusicGlobalVolume;
+                sfxGlobalVolume = value;
+                PlayerPrefs.SetFloat(SFXVolumeKey, value);
+            }
+        }
+        public float MusicGlobalVolume
+        {
+            get => musicGlobalVolume;
+            set
+            {
+                musicGlobalVolume = value;
+                musicSource.volume = musicGlobalVolume;
+                PlayerPrefs.SetFloat(MusicVolumeKey, musicGlobalVolume);
             }
         }
 
@@ -37,9 +49,11 @@ namespace BeeRun
             instance = this;
             DontDestroyOnLoad(gameObject);
             musicSource = GetComponent<AudioSource>();
+            sfxGlobalVolume = PlayerPrefs.GetFloat(SFXVolumeKey, musicGlobalVolume);
+            musicGlobalVolume = PlayerPrefs.GetFloat(MusicVolumeKey, sfxGlobalVolume);
         }
 
-        
+
 
         public void PlaySound(string name, Vector3 position, float volume = 1f)
         {
@@ -58,7 +72,7 @@ namespace BeeRun
             AudioClip clip = library.GetSound(name);
             if (clip != null)
             {
-                musicSource.volume = _MusicGlobalVolume;
+                musicSource.volume = musicGlobalVolume;
                 if (clip != musicSource.clip)
                 {
                     musicSource.clip = library.GetSound(name);

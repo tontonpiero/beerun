@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,6 +12,7 @@ namespace BeeRun
         static public GameManager Instance => instance;
 
         [SerializeField] private PlayerController playerController;
+        [SerializeField] private float startDelay;
 
         public event Action<CollectibleType> OnCollected;
 
@@ -24,19 +26,20 @@ namespace BeeRun
 
         private void Start()
         {
-            AudioManager.Instance.PlayMusic("music_01");
+            AudioManager.Instance.PlayMusic("music_game");
+
+            StartCoroutine(StartGame());
+        }
+
+        private IEnumerator StartGame()
+        {
+            yield return new WaitForSeconds(startDelay);
+            playerController.StartRun();
         }
 
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                AudioManager.Instance.PlaySound("click_01");
-            }
-            if (Input.GetMouseButtonDown(1))
-            {
-                LevelManager.Instance.Restart();
-            }
+            
         }
 
         public void Collect(CollectibleType type)

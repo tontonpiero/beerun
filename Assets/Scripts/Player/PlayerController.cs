@@ -30,7 +30,7 @@ namespace BeeRun
             targetPosition = body.localPosition;
         }
 
-        public void Move()
+        public void StartRun()
         {
             CurrentSpeed = constantSpeed;
         }
@@ -39,12 +39,6 @@ namespace BeeRun
         {
             if (!IsDead)
             {
-                // temp
-                if (CurrentSpeed == 0f && Input.GetKeyDown(KeyCode.Space))
-                {
-                    Move();
-                }
-
                 // Move forward
                 Vector3 position = transform.position;
                 position += CurrentSpeed * Time.deltaTime * transform.forward;
