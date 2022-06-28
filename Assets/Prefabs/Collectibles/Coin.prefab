@@ -208,6 +208,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   values: {x: 0, y: 0, z: 1}
+  randomStart: 1
   Speed: 60
 --- !u!1 &5161130568724386585
 GameObject:

@@ -2,7 +2,7 @@
 {
     public interface ILevelManager
     {
-        void Load(string name);
+        void Load(string name, bool additive = false);
         void Restart();
     }
 }

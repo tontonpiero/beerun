@@ -295,4 +295,6 @@ MonoBehaviour:
     Name: home
   - Scene: GameScene
     Name: game
+  - Scene: Level01
+    Name: level_01
   fadeTransition: {fileID: 1873822159}

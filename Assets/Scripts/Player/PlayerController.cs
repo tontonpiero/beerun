@@ -13,12 +13,14 @@ namespace BeeRun
         [SerializeField] private float minHorizontal = -3f;
         [SerializeField] private float maxHorizontal = 3f;
         [SerializeField] private Transform body;
+        [SerializeField] private SkinnedMeshRenderer meshRenderer;
 
         public event Action OnDeath;
         public event Action OnHit;
 
         public float CurrentSpeed { get; private set; }
         public bool IsDead { get; private set; }
+        public bool IsProtected { get; private set; }
 
         private Vector3 targetPosition;
         private Vector3 velocity;
@@ -35,16 +37,19 @@ namespace BeeRun
 
         private void Update()
         {
-            // temp
-            if (CurrentSpeed == 0f && Input.GetKeyDown(KeyCode.Space))
+            if (!IsDead)
             {
-                Move();
-            }
+                // temp
+                if (CurrentSpeed == 0f && Input.GetKeyDown(KeyCode.Space))
+                {
+                    Move();
+                }
 
-            // Move forward
-            Vector3 position = transform.position;
-            position += CurrentSpeed * Time.deltaTime * transform.forward;
-            transform.position = position;
+                // Move forward
+                Vector3 position = transform.position;
+                position += CurrentSpeed * Time.deltaTime * transform.forward;
+                transform.position = position;
+            }
 
             UpdateBodyPosition();
         }
@@ -71,6 +76,36 @@ namespace BeeRun
         public void Turn(float angle)
         {
             transform.Rotate(Vector3.up, angle);
+        }
+
+        public void TakeDamage()
+        {
+            if (IsProtected) return;
+            OnHit?.Invoke();
+
+            StartCoroutine(HitRoutine());
+        }
+
+        private IEnumerator HitRoutine()
+        {
+            IsProtected = true;
+            float timeLeft = 2f;
+            while (timeLeft > 0f)
+            {
+                meshRenderer.enabled = ((int)(timeLeft * 10)) % 2 == 0;
+                timeLeft -= Time.deltaTime;
+                yield return null;
+            }
+            IsProtected = false;
+            meshRenderer.enabled = true;
+        }
+
+        public void Kill()
+        {
+            if (IsProtected) return;
+            IsDead = true;
+            targetPosition.y = 1.05f;
+            OnDeath?.Invoke();
         }
 
         private void OnDestroy()

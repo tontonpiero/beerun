@@ -10,7 +10,7 @@ namespace BeeRun
 
         private void OnTriggerEnter(Collider other)
         {
-            PlayerController controller = other.gameObject.GetComponent<PlayerController>();
+            PlayerController controller = other.gameObject.GetComponentInParent<PlayerController>();
             if (controller != null)
             {
                 controller.Turn(Angle);

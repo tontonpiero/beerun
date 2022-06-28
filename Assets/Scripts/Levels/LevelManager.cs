@@ -35,27 +35,33 @@ namespace BeeRun
             fadeTransition.TransitionIn();
         }
 
-        public void Load(string name)
+        public void Load(string name, bool additive = false)
         {
             Level level = levels.FirstOrDefault(l => l.Name == name);
             Debug.Log($"LevelManager - Load() {level}");
             if (level != null)
             {
-                LoadSceneAsync(level.Scene);
+                if (!SceneManager.GetSceneByName(level.Scene).isLoaded)
+                {
+                    LoadSceneAsync(level.Scene, additive);
+                }
             }
         }
 
-        private async void LoadSceneAsync(string sceneName)
+        private async void LoadSceneAsync(string sceneName, bool additive)
         {
-            fadeTransition.TransitionOut();
-            float delay = fadeTransition.TransitionOutConfig.Delay + fadeTransition.TransitionOutConfig.Duration;
-            await Task.Delay((int)(delay * 1000));
-            SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+            if (!additive)
+            {
+                fadeTransition.TransitionOut();
+                float delay = fadeTransition.TransitionOutConfig.Delay + fadeTransition.TransitionOutConfig.Duration;
+                await Task.Delay((int)(delay * 1000));
+            }
+            SceneManager.LoadSceneAsync(sceneName, additive ? LoadSceneMode.Additive : LoadSceneMode.Single);
         }
 
         public void Restart()
         {
-            LoadSceneAsync(SceneManager.GetActiveScene().name);
+            LoadSceneAsync(SceneManager.GetActiveScene().name, false);
         }
     }
 }
