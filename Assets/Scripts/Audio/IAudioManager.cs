@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace HomaTest
+namespace BeeRun
 {
     public interface IAudioManager
     {

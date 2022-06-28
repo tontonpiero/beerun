@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HomaTest
+namespace BeeRun
 {
     public class BaseScreen : MonoBehaviour
     {

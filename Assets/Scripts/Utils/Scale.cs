@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace HomaTest
+namespace BeeRun
 {
     public class Scale : MonoBehaviour
     {

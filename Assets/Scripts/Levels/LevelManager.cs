@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace HomaTest
+namespace BeeRun
 {
     public class LevelManager : MonoBehaviour, ILevelManager
     {
