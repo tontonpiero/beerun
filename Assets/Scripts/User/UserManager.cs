@@ -40,6 +40,10 @@ namespace BeeRun
 
         private void SaveData() => dataSource.SaveData(userData);
 
+        public int Coins => userData.Coins;
+        public int MaxLevel => userData.MaxLevel;
+        public int NextLevel => userData.MaxLevel + 1;
+
         public void OnAppLaunched()
         {
             userData.AppLaunchCount++;

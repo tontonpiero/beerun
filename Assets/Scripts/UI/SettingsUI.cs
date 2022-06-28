@@ -11,6 +11,7 @@ namespace BeeRun
         [SerializeField] private Slider sfxSlider;
         [SerializeField] private Slider musicSlider;
         [SerializeField] private TMP_Text versionText;
+        [SerializeField] private GameObject homeUI;
 
         private void OnEnable()
         {
@@ -33,11 +34,13 @@ namespace BeeRun
         public void Show()
         {
             gameObject.SetActive(true);
+            homeUI.SetActive(false);
         }
 
         public void Hide()
         {
             gameObject.SetActive(false);
+            homeUI.SetActive(true);
         }
     }
 }
