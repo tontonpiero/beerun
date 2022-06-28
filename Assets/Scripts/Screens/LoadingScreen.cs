@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,22 +16,37 @@ namespace BeeRun
         {
             loadingUI.SetActive(true);
             loadedUI.SetActive(false);
-            UpdateProgressBar(0f);
+            LoadGame();
+        }
+
+        private async Task LoadGame()
+        {
+            SetProgress(0f);
+            await UserManager.Instance.Initialize();
+            SetProgress(0.1f);
+
+            UserManager.Instance.OnAppLaunched();
+
+            // fake progress
+            while (progress < 1f)
+            {
+                SetProgress(progress + Time.deltaTime);
+                await Task.Yield();
+            }
+            SetProgress(1f);
+
+            OnLoadingComplete();
+        }
+
+        private void OnLoadingComplete()
+        {
+            loadingUI.SetActive(false);
+            loadedUI.SetActive(true);
         }
 
         private void Update()
         {
-            if (progress < 1f)
-            {
-                progress += Time.deltaTime;
-                UpdateProgressBar(progress);
-                if (progress >= 1f)
-                {
-                    loadingUI.SetActive(false);
-                    loadedUI.SetActive(true);
-                }
-            }
-            else
+            if (progress >= 1f)
             {
                 if (Input.GetMouseButtonDown(0))
                 {
@@ -39,8 +55,9 @@ namespace BeeRun
             }
         }
 
-        private void UpdateProgressBar(float progress)
+        private void SetProgress(float progress)
         {
+            this.progress = progress;
             progressImage.fillAmount = Mathf.Clamp01(progress);
         }
     }

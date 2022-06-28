@@ -17,11 +17,11 @@ MonoBehaviour:
     Clip: {fileID: 8300000, guid: 72911a30ba1961c408a01a9841fc02f2, type: 3}
   - Name: music_home
     Clip: {fileID: 8300000, guid: 416b9c14e62c8174d8ef551fc836fa69, type: 3}
-  - Name: click_01
+  - Name: click
     Clip: {fileID: 8300000, guid: 045b37413283f834097c32b2579294ca, type: 3}
-  - Name: click_02
-    Clip: {fileID: 8300000, guid: a4129201f0aa0fe4e8d5bd252f3e835a, type: 3}
   - Name: collect_coin
     Clip: {fileID: 8300000, guid: e1ae4fe44be07cc4c86536924c6b4355, type: 3}
   - Name: collect_flower
     Clip: {fileID: 8300000, guid: d8add6d883c776645a6f39e19ebccdb8, type: 3}
+  - Name: aah
+    Clip: {fileID: 8300000, guid: 02e64d697874f2840ab9dea5fa3fc91c, type: 3}

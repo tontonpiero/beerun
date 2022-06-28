@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,11 +10,14 @@ namespace BeeRun
     {
         [SerializeField] private Slider sfxSlider;
         [SerializeField] private Slider musicSlider;
+        [SerializeField] private TMP_Text versionText;
 
         private void OnEnable()
         {
             sfxSlider.value = AudioManager.Instance.SFXGlobalVolume;
             musicSlider.value = AudioManager.Instance.MusicGlobalVolume;
+
+            versionText.text = "Version " + Application.version;
         }
 
         public void OnSFXVolumeChanged()

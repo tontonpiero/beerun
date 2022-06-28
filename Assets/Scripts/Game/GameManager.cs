@@ -35,11 +35,7 @@ namespace BeeRun
         {
             yield return new WaitForSeconds(startDelay);
             playerController.StartRun();
-        }
-
-        private void Update()
-        {
-            
+            UserManager.Instance.OnGameStarted();
         }
 
         public void Collect(CollectibleType type)
@@ -56,6 +52,11 @@ namespace BeeRun
                     break;
             }
             OnCollected?.Invoke(type);
+        }
+
+        public void GameOver(bool won)
+        {
+            UserManager.Instance.OnGameComplete(won, 1, CoinCount);
         }
 
         private void OnDestroy()

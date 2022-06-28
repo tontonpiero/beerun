@@ -62,9 +62,14 @@ namespace BeeRun
                 AudioSource.PlayClipAtPoint(clip, position, volume * SFXGlobalVolume);
         }
 
-        public void PlaySound(string name, float volume = 1f)
+        public void PlaySound(string name, float volume)
         {
             PlaySound(name, Camera.main.transform.position, volume);
+        }
+
+        public void PlaySound(string name)
+        {
+            PlaySound(name, Camera.main.transform.position, 1f);
         }
 
         public void PlayMusic(string name)
