@@ -15,9 +15,10 @@ namespace BeeRun
         [SerializeField] private Transform body;
         [SerializeField] private SkinnedMeshRenderer meshRenderer;
 
-        public event Action OnDeath;
-        public event Action OnHit;
+        public event Action<ObstacleBehaviour> OnDeath;
+        public event Action<ObstacleBehaviour> OnHit;
 
+        public float ConstantSpeed => constantSpeed;
         public float CurrentSpeed { get; private set; }
         public bool IsDead { get; private set; }
         public bool IsProtected { get; private set; }
@@ -72,12 +73,27 @@ namespace BeeRun
             transform.Rotate(Vector3.up, angle);
         }
 
-        public void TakeDamage()
+        public void HitObstacle(ObstacleBehaviour behaviour)
         {
             if (IsProtected) return;
-            OnHit?.Invoke();
 
-            StartCoroutine(HitRoutine());
+            switch (behaviour)
+            {
+                case ObstacleBehaviour.Damage:
+                    OnHit?.Invoke(behaviour);
+                    StartCoroutine(HitRoutine());
+                    break;
+                case ObstacleBehaviour.Kill:
+                    IsDead = true;
+                    targetPosition.y = 1.05f;
+                    OnDeath?.Invoke(behaviour);
+                    break;
+                case ObstacleBehaviour.Web:
+                    IsDead = true;
+                    targetPosition = body.localPosition;
+                    OnDeath?.Invoke(behaviour);
+                    break;
+            }
         }
 
         private IEnumerator HitRoutine()
@@ -92,14 +108,6 @@ namespace BeeRun
             }
             IsProtected = false;
             meshRenderer.enabled = true;
-        }
-
-        public void Kill()
-        {
-            if (IsProtected) return;
-            IsDead = true;
-            targetPosition.y = 1.05f;
-            OnDeath?.Invoke();
         }
 
         private void OnDestroy()

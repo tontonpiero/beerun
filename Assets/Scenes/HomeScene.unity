@@ -490,7 +490,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 181166672}
-  m_LocalRotation: {x: 0.06195248, y: 0.2561401, z: -0.016452376, w: 0.96451205}
+  m_LocalRotation: {x: 0.061952498, y: 0.25614008, z: -0.016452378, w: 0.96451205}
   m_LocalPosition: {x: -4, y: 2.54, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2678,7 +2678,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.06195248, y: 0.2561401, z: -0.016452376, w: 0.96451205}
+  m_LocalRotation: {x: 0.061952498, y: 0.25614008, z: -0.016452378, w: 0.96451205}
   m_LocalPosition: {x: -4, y: 2.54, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -3765,17 +3765,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1160097040}
   m_CullTransparentMesh: 1
---- !u!114 &1169795396 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1745373889079030082, guid: 9ccb18cd591a5d94bb6e7c842797b010, type: 3}
-  m_PrefabInstance: {fileID: 1745373889049521802}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05ef240a31c51674caded1b519daed3b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1200823354
 GameObject:
   m_ObjectHideFlags: 0
@@ -4587,16 +4576,16 @@ MonoBehaviour:
           m_StringArgument: Hit
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1169795396}
-        m_TargetAssemblyTypeName: BeeRun.AudioManager, Assembly-CSharp
-        m_MethodName: PlaySound
-        m_Mode: 5
+      - m_Target: {fileID: 1484352790}
+        m_TargetAssemblyTypeName: BeeRun.PlaySound, Assembly-CSharp
+        m_MethodName: Play
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: aah
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!135 &1484352789
@@ -4612,6 +4601,22 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.3
   m_Center: {x: 0, y: 0.42, z: 0}
+--- !u!114 &1484352790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1484352786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c3578fb82196044ab0018dbafb0e3be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  soundName: aah
+  volume: 1
+  playAtPosition: 0
+  playOnStart: 0
 --- !u!1 &1492215243
 GameObject:
   m_ObjectHideFlags: 0

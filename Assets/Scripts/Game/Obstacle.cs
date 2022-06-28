@@ -12,11 +12,7 @@ namespace BeeRun
             PlayerController controller = other.gameObject.GetComponentInParent<PlayerController>();
             if (controller != null)
             {
-                switch (behaviour)
-                {
-                    case ObstacleBehaviour.Damage: controller.TakeDamage(); break;
-                    case ObstacleBehaviour.Kill: controller.Kill(); break;
-                }
+                controller.HitObstacle(behaviour);
             }
         }
     }
@@ -25,6 +21,7 @@ namespace BeeRun
     public enum ObstacleBehaviour
     {
         Damage,
-        Kill
+        Kill,
+        Web
     }
 }
