@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace BeeRun
@@ -26,6 +25,13 @@ namespace BeeRun
         private Vector3 targetPosition;
         private Vector3 velocity;
 
+        private Vector3 turnStartPos;
+        private Vector3 turnEndPos;
+        private Quaternion turnStartRot;
+        private Quaternion turnEndRot;
+        private float turnTimeLeft = 0f;
+        private const float turnDuration = 1f;
+
         private void Start()
         {
             targetPosition = body.localPosition;
@@ -40,10 +46,24 @@ namespace BeeRun
         {
             if (!IsDead)
             {
-                // Move forward
-                Vector3 position = transform.position;
-                position += CurrentSpeed * Time.deltaTime * transform.forward;
-                transform.position = position;
+                if (turnTimeLeft > 0f)
+                {
+                    turnTimeLeft -= Time.deltaTime;
+                    float progress = 1f - (turnTimeLeft / turnDuration);
+
+                    Vector3 position = Vector3.Lerp(turnStartPos, turnEndPos, progress);
+                    Quaternion direction = Quaternion.Lerp(turnStartRot, turnEndRot, progress);
+
+                    transform.SetPositionAndRotation(position, direction);
+                }
+                else
+                {
+                    // Move forward
+                    Vector3 position = transform.position;
+                    position += CurrentSpeed * Time.deltaTime * transform.forward;
+                    transform.position = position;
+                }
+
             }
 
             UpdateBodyPosition();
@@ -68,9 +88,13 @@ namespace BeeRun
             targetPosition.x = MathUtils.Map(value, -1f, 1f, minHorizontal, maxHorizontal);
         }
 
-        public void Turn(float angle)
+        public void Turn(Vector3 position, Quaternion rotation)
         {
-            transform.Rotate(Vector3.up, angle);
+            turnTimeLeft = turnDuration;
+            turnStartPos = transform.position;
+            turnStartRot = transform.rotation;
+            turnEndPos = position;
+            turnEndRot = rotation;
         }
 
         public void HitObstacle(ObstacleBehaviour behaviour)

@@ -6,14 +6,14 @@ namespace BeeRun
 {
     public class TurnEffector : MonoBehaviour
     {
-        public float Angle = 0f;
+        public Transform Direction;
 
         private void OnTriggerEnter(Collider other)
         {
             PlayerController controller = other.gameObject.GetComponentInParent<PlayerController>();
             if (controller != null)
             {
-                controller.Turn(Angle);
+                controller.Turn(Direction.position, Direction.rotation);
                 Destroy(gameObject);
             }
         }
