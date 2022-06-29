@@ -23,5 +23,9 @@ MonoBehaviour:
     Clip: {fileID: 8300000, guid: e1ae4fe44be07cc4c86536924c6b4355, type: 3}
   - Name: collect_flower
     Clip: {fileID: 8300000, guid: d8add6d883c776645a6f39e19ebccdb8, type: 3}
-  - Name: aah
-    Clip: {fileID: 8300000, guid: 02e64d697874f2840ab9dea5fa3fc91c, type: 3}
+  - Name: bee
+    Clip: {fileID: 8300000, guid: be97ed38aaee0a14db364197d49e3a53, type: 3}
+  - Name: step_up
+    Clip: {fileID: 8300000, guid: 32b8ccecba7f25f4fa0be764ae03056d, type: 3}
+  - Name: step_max
+    Clip: {fileID: 8300000, guid: 183a1a8f45d389e4b94d6213f1d18b3b, type: 3}

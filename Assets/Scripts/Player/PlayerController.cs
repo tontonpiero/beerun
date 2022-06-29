@@ -22,19 +22,31 @@ namespace BeeRun
         public bool IsDead { get; private set; }
         public bool IsProtected { get; private set; }
 
+        // Position variables
+        private bool isReachingPosition = false;
+        private Action onReachedCallback;
         private Vector3 targetPosition;
         private Vector3 velocity;
+        private Quaternion startRotation;
+        private Quaternion targetRotation;
+        private const float rotationDuration = 0.5f;
+        private float rotationTimeleft;
 
+        // Body variables
+        private Vector3 targetBodyPosition;
+        private Vector3 bodyVelocity;
+
+        // Turn variables
         private Vector3 turnStartPos;
         private Vector3 turnEndPos;
         private Quaternion turnStartRot;
         private Quaternion turnEndRot;
-        private float turnTimeLeft = 0f;
         private const float turnDuration = 1f;
+        private float turnTimeLeft = 0f;
 
         private void Start()
         {
-            targetPosition = body.localPosition;
+            targetBodyPosition = body.localPosition;
         }
 
         public void StartRun()
@@ -42,36 +54,72 @@ namespace BeeRun
             CurrentSpeed = constantSpeed;
         }
 
+        public void StopRun()
+        {
+            CurrentSpeed = 0f;
+        }
+
         private void Update()
         {
-            if (!IsDead)
+            UpdateReachPosition();
+            UpdateRun();
+            UpdateBodyPosition();
+        }
+
+        private void UpdateReachPosition()
+        {
+            if (!isReachingPosition) return;
+
+            // Update rotation
+            if (rotationTimeleft > 0f)
             {
-                if (turnTimeLeft > 0f)
+                rotationTimeleft -= Time.deltaTime;
+                if (rotationTimeleft <= rotationDuration)
                 {
-                    turnTimeLeft -= Time.deltaTime;
-                    float progress = 1f - (turnTimeLeft / turnDuration);
-
-                    Vector3 position = Vector3.Lerp(turnStartPos, turnEndPos, progress);
-                    Quaternion direction = Quaternion.Lerp(turnStartRot, turnEndRot, progress);
-
-                    transform.SetPositionAndRotation(position, direction);
+                    float progress = 1f - (rotationTimeleft / rotationDuration);
+                    transform.rotation = Quaternion.Lerp(startRotation, targetRotation, progress);
                 }
-                else
-                {
-                    // Move forward
-                    Vector3 position = transform.position;
-                    position += CurrentSpeed * Time.deltaTime * transform.forward;
-                    transform.position = position;
-                }
-
             }
 
-            UpdateBodyPosition();
+            // Update position
+            transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, 0.2f, ConstantSpeed);
+
+            // Check distance to target
+            if ((targetPosition - transform.position).magnitude < 0.2f)
+            {
+                isReachingPosition = false;
+                onReachedCallback?.Invoke();
+            }
+        }
+
+        private void UpdateRun()
+        {
+            if (IsDead) return;
+            if (CurrentSpeed <= 0f) return;
+            if (isReachingPosition) return;
+
+            if (turnTimeLeft > 0f)
+            {
+                turnTimeLeft -= Time.deltaTime;
+                float progress = 1f - (turnTimeLeft / turnDuration);
+
+                Vector3 position = Vector3.Lerp(turnStartPos, turnEndPos, progress);
+                Quaternion direction = Quaternion.Lerp(turnStartRot, turnEndRot, progress);
+
+                transform.SetPositionAndRotation(position, direction);
+            }
+            else
+            {
+                // Move forward
+                Vector3 position = transform.position;
+                position += CurrentSpeed * Time.deltaTime * transform.forward;
+                transform.position = position;
+            }
         }
 
         private void UpdateBodyPosition()
         {
-            Vector3 position = Vector3.SmoothDamp(body.localPosition, targetPosition, ref velocity, 0.5f);
+            Vector3 position = Vector3.SmoothDamp(body.localPosition, targetBodyPosition, ref bodyVelocity, 0.5f);
             position.z = 0f;
             body.localPosition = position;
         }
@@ -79,13 +127,23 @@ namespace BeeRun
         public void SetVertical(float value)
         {
             value = Mathf.Clamp(value, -1f, 1f);
-            targetPosition.y = MathUtils.Map(value, -1f, 1f, minVertical, maxVertical);
+            targetBodyPosition.y = MathUtils.Map(value, -1f, 1f, minVertical, maxVertical);
         }
 
         public void SetHorizontal(float value)
         {
             value = Mathf.Clamp(value, -1f, 1f);
-            targetPosition.x = MathUtils.Map(value, -1f, 1f, minHorizontal, maxHorizontal);
+            targetBodyPosition.x = MathUtils.Map(value, -1f, 1f, minHorizontal, maxHorizontal);
+        }
+
+        public void Reach(Vector3 position, Quaternion rotation, Action onReached)
+        {
+            isReachingPosition = true;
+            targetPosition = position;
+            onReachedCallback = onReached;
+            startRotation = transform.rotation;
+            targetRotation = rotation;
+            rotationTimeleft = rotationDuration + 1.5f;
         }
 
         public void Turn(Vector3 position, Quaternion rotation)
@@ -109,15 +167,17 @@ namespace BeeRun
                     break;
                 case ObstacleBehaviour.Kill:
                     IsDead = true;
-                    targetPosition.y = 1.05f;
+                    targetBodyPosition.y = 1.05f;
                     OnDeath?.Invoke(behaviour);
                     break;
                 case ObstacleBehaviour.Web:
                     IsDead = true;
-                    targetPosition = body.localPosition;
+                    targetBodyPosition = body.localPosition;
                     OnDeath?.Invoke(behaviour);
                     break;
             }
+
+            AudioManager.Instance.PlaySound("bee");
         }
 
         private IEnumerator HitRoutine()
@@ -138,6 +198,7 @@ namespace BeeRun
         {
             OnHit = null;
             OnDeath = null;
+            onReachedCallback = null;
         }
     }
 }

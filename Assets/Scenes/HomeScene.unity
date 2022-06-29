@@ -490,7 +490,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 181166672}
-  m_LocalRotation: {x: 0.061952498, y: 0.25614008, z: -0.016452378, w: 0.96451205}
+  m_LocalRotation: {x: 0.06195248, y: 0.2561401, z: -0.016452376, w: 0.96451205}
   m_LocalPosition: {x: -4, y: 2.54, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2678,7 +2678,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.061952498, y: 0.25614008, z: -0.016452378, w: 0.96451205}
+  m_LocalRotation: {x: 0.06195248, y: 0.2561401, z: -0.016452376, w: 0.96451205}
   m_LocalPosition: {x: -4, y: 2.54, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -4613,7 +4613,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c3578fb82196044ab0018dbafb0e3be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundName: aah
+  soundName: bee
   volume: 1
   playAtPosition: 0
   playOnStart: 0

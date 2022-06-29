@@ -4,14 +4,9 @@ namespace BeeRun
 {
     public class GameScreen : BaseScreen
     {
-        private void Start()
+        public async void OnBack()
         {
-            LevelManager.Instance.Load("level_01", true);
-        }
-
-        public void OnBack()
-        {
-            LevelManager.Instance.Load("home");
+            await LevelManager.Instance.LoadAsync("home");
         }
     }
 }

@@ -37,18 +37,23 @@ namespace BeeRun
 
         public void Load(string name, bool additive = false)
         {
+            Task.Run(() => LoadAsync(name, additive));
+        }
+
+        public async Task LoadAsync(string name, bool additive = false)
+        {
             Level level = levels.FirstOrDefault(l => l.Name == name);
             Debug.Log($"LevelManager - Load() {level}");
             if (level != null)
             {
                 if (!SceneManager.GetSceneByName(level.Scene).isLoaded)
                 {
-                    LoadSceneAsync(level.Scene, additive);
+                    await LoadSceneAsync(level.Scene, additive);
                 }
             }
         }
 
-        private async void LoadSceneAsync(string sceneName, bool additive)
+        private async Task LoadSceneAsync(string sceneName, bool additive)
         {
             if (!additive)
             {
@@ -56,12 +61,23 @@ namespace BeeRun
                 float delay = fadeTransition.TransitionOutConfig.Delay + fadeTransition.TransitionOutConfig.Duration;
                 await Task.Delay((int)(delay * 1000));
             }
-            SceneManager.LoadSceneAsync(sceneName, additive ? LoadSceneMode.Additive : LoadSceneMode.Single);
+
+            // Load scene
+            AsyncOperation op = SceneManager.LoadSceneAsync(sceneName, additive ? LoadSceneMode.Additive : LoadSceneMode.Single);
+            while (!op.isDone)
+            {
+                await Task.Yield();
+            }
         }
 
         public void Restart()
         {
-            LoadSceneAsync(SceneManager.GetActiveScene().name, false);
+            Task.Run(() => RestartAsync());
+        }
+
+        public async Task RestartAsync()
+        {
+            await LoadSceneAsync(SceneManager.GetActiveScene().name, false);
         }
     }
 }

@@ -15,9 +15,9 @@ namespace BeeRun
             Application.Quit();
         }
 
-        public void OnClickPlay()
+        public async void OnClickPlay()
         {
-            LevelManager.Instance.Load("game");
+            await LevelManager.Instance.LoadAsync("game");
         }
     }
 }

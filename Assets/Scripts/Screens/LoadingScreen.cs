@@ -12,11 +12,11 @@ namespace BeeRun
 
         private float progress = 0f;
 
-        private void Start()
+        private async void Start()
         {
             loadingUI.SetActive(true);
             loadedUI.SetActive(false);
-            LoadGame();
+            await LoadGame();
         }
 
         private async Task LoadGame()

@@ -21,6 +21,7 @@ namespace BeeRun
         private void Update()
         {
             if (controller.IsDead) return;
+            if (GameManager.Instance.State != GameState.Started) return;
             if (Input.GetMouseButtonDown(0))
             {
                 origin = Input.mousePosition;

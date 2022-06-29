@@ -18,6 +18,7 @@ namespace BeeRun
             string strData = PlayerPrefs.GetString(key, null);
             Debug.Log($"PlayerPrefsDataSource - LoadData() {strData}");
             if (string.IsNullOrEmpty(strData)) return default;
+            await Task.Yield();
             try
             {
                 return JsonUtility.FromJson<T>(strData);
