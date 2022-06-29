@@ -16,14 +16,14 @@ namespace BeeRun
             UpdateCounter();
         }
 
-        private void OnCollectedSomething(CollectibleType type)
+        private void OnCollectedSomething(CollectibleType type, int amount)
         {
             if (type == CollectibleType.Coin) UpdateCounter();
         }
 
         private void UpdateCounter()
         {
-            textCounter.text = GameManager.Instance.CoinCount.ToString();
+            textCounter.text = $"+{GameManager.Instance.CoinCount}";
         }
     }
 }

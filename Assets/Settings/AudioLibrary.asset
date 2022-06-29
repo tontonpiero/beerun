@@ -20,12 +20,14 @@ MonoBehaviour:
   - Name: click
     Clip: {fileID: 8300000, guid: 045b37413283f834097c32b2579294ca, type: 3}
   - Name: collect_coin
-    Clip: {fileID: 8300000, guid: e1ae4fe44be07cc4c86536924c6b4355, type: 3}
+    Clip: {fileID: 8300000, guid: c4b343e7c5363204e9866d00e41bff2b, type: 3}
   - Name: collect_flower
-    Clip: {fileID: 8300000, guid: d8add6d883c776645a6f39e19ebccdb8, type: 3}
+    Clip: {fileID: 8300000, guid: e1ae4fe44be07cc4c86536924c6b4355, type: 3}
   - Name: bee
     Clip: {fileID: 8300000, guid: be97ed38aaee0a14db364197d49e3a53, type: 3}
   - Name: step_up
     Clip: {fileID: 8300000, guid: 32b8ccecba7f25f4fa0be764ae03056d, type: 3}
   - Name: step_max
     Clip: {fileID: 8300000, guid: 183a1a8f45d389e4b94d6213f1d18b3b, type: 3}
+  - Name: lose_flower
+    Clip: {fileID: 8300000, guid: af29cfbb0a8d3d340a48dce5de242cd7, type: 3}

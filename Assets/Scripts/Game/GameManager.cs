@@ -17,7 +17,7 @@ namespace BeeRun
         [SerializeField] private PlayerController playerController;
         [SerializeField] private float startDelay;
 
-        public event Action<CollectibleType> OnCollected;
+        public event Action<CollectibleType, int> OnCollected;
         public event Action OnGameStart;
         public event Action<bool> OnGameEnd;
 
@@ -38,7 +38,10 @@ namespace BeeRun
         private async Task LoadAndStartGame()
         {
             // Load level
-            await LevelManager.Instance.LoadAsync("level_01", true);
+            if (!IsLevelLoaded())
+            {
+                await LevelManager.Instance.LoadAsync("level_01", true);
+            }
 
             // Play music
             AudioManager.Instance.PlayMusic("music_game");
@@ -54,20 +57,45 @@ namespace BeeRun
             playerController.StartRun();
         }
 
+        private bool IsLevelLoaded()
+        {
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+                if (SceneManager.GetSceneAt(i).name.Contains("Level")) return true;
+            }
+            return false;
+        }
+
         public void Collect(CollectibleType type, int amount = 1)
         {
             switch (type)
             {
                 case CollectibleType.Coin:
-                    AudioManager.Instance.PlaySound("collect_coin");
+                    if (amount > 0) AudioManager.Instance.PlaySound("collect_coin");
+                    else AudioManager.Instance.PlaySound("lose_coin");
                     CoinCount += amount;
                     break;
                 case CollectibleType.Flower:
-                    AudioManager.Instance.PlaySound("collect_flower");
+                    if (amount > 0) AudioManager.Instance.PlaySound("collect_flower");
+                    else AudioManager.Instance.PlaySound("lose_flower");
                     FlowerCount += amount;
                     break;
             }
-            OnCollected?.Invoke(type);
+            OnCollected?.Invoke(type, amount);
+        }
+
+        public void HitObstacle(ObstacleBehaviour behaviour)
+        {
+            switch (behaviour)
+            {
+                case ObstacleBehaviour.Damage:
+                    Collect(CollectibleType.Flower, -1);
+                    break;
+                case ObstacleBehaviour.Kill:
+                    break;
+                case ObstacleBehaviour.Web:
+                    break;
+            }
         }
 
         private void OnPlayerDeath(ObstacleBehaviour behaviour)
@@ -82,7 +110,6 @@ namespace BeeRun
         {
             if (State != GameState.Started) return;
             State = GameState.Ending;
-            FlowerCount = UnityEngine.Random.Range(0, 10); // temp
             followCamera.gameObject.SetActive(false);
             hive.StartEndAnimation(FlowerCount, playerController, OnEndAnimationComplete);
         }

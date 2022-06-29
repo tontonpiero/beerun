@@ -29,7 +29,7 @@ namespace BeeRun
         private Vector3 velocity;
         private Quaternion startRotation;
         private Quaternion targetRotation;
-        private const float rotationDuration = 0.5f;
+        private const float rotationDuration = 1.5f;
         private float rotationTimeleft;
 
         // Body variables
@@ -77,12 +77,12 @@ namespace BeeRun
                 if (rotationTimeleft <= rotationDuration)
                 {
                     float progress = 1f - (rotationTimeleft / rotationDuration);
-                    transform.rotation = Quaternion.Lerp(startRotation, targetRotation, progress);
+                    body.rotation = Quaternion.Lerp(startRotation, targetRotation, progress);
                 }
             }
 
             // Update position
-            transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, 0.2f, ConstantSpeed);
+            transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, 0.2f, 5f);
 
             // Check distance to target
             if ((targetPosition - transform.position).magnitude < 0.2f)
@@ -141,9 +141,9 @@ namespace BeeRun
             isReachingPosition = true;
             targetPosition = position;
             onReachedCallback = onReached;
-            startRotation = transform.rotation;
+            startRotation = body.rotation;
             targetRotation = rotation;
-            rotationTimeleft = rotationDuration + 1.5f;
+            rotationTimeleft = rotationDuration;
         }
 
         public void Turn(Vector3 position, Quaternion rotation)
@@ -177,6 +177,8 @@ namespace BeeRun
                     OnDeath?.Invoke(behaviour);
                     break;
             }
+
+            GameManager.Instance.HitObstacle(behaviour);
 
             AudioManager.Instance.PlaySound("bee");
         }
