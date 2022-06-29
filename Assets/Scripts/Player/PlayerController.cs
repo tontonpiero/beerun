@@ -163,6 +163,7 @@ namespace BeeRun
             {
                 case ObstacleBehaviour.Damage:
                     OnHit?.Invoke(behaviour);
+                    IsProtected = true;
                     StartCoroutine(HitRoutine());
                     break;
                 case ObstacleBehaviour.Kill:
@@ -182,7 +183,6 @@ namespace BeeRun
 
         private IEnumerator HitRoutine()
         {
-            IsProtected = true;
             float timeLeft = 2f;
             while (timeLeft > 0f)
             {
@@ -192,6 +192,14 @@ namespace BeeRun
             }
             IsProtected = false;
             meshRenderer.enabled = true;
+        }
+
+        public void Continue()
+        {
+            if (!IsDead) return;
+            IsDead = false;
+            StartRun();
+            HitObstacle(ObstacleBehaviour.Damage);
         }
 
         private void OnDestroy()

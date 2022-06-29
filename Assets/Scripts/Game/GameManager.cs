@@ -18,6 +18,8 @@ namespace BeeRun
         [SerializeField] private float startDelay;
 
         public event Action<CollectibleType> OnCollected;
+        public event Action OnGameStart;
+        public event Action<bool> OnGameEnd;
 
         public int CoinCount { get; private set; }
         public int FlowerCount { get; private set; }
@@ -47,27 +49,38 @@ namespace BeeRun
             // Start run!
             UserManager.Instance.OnGameStarted();
             State = GameState.Started;
+            OnGameStart?.Invoke();
+            playerController.OnDeath += OnPlayerDeath;
             playerController.StartRun();
         }
 
-        public void Collect(CollectibleType type)
+        public void Collect(CollectibleType type, int amount = 1)
         {
             switch (type)
             {
                 case CollectibleType.Coin:
                     AudioManager.Instance.PlaySound("collect_coin");
-                    CoinCount++;
+                    CoinCount += amount;
                     break;
                 case CollectibleType.Flower:
                     AudioManager.Instance.PlaySound("collect_flower");
-                    FlowerCount++;
+                    FlowerCount += amount;
                     break;
             }
             OnCollected?.Invoke(type);
         }
 
+        private void OnPlayerDeath(ObstacleBehaviour behaviour)
+        {
+            if (State != GameState.Started) return;
+            State = GameState.Ending;
+
+            OnGameEnd?.Invoke(false);
+        }
+
         public void ReachHive(Hive hive)
         {
+            if (State != GameState.Started) return;
             State = GameState.Ending;
             FlowerCount = UnityEngine.Random.Range(0, 10); // temp
             followCamera.gameObject.SetActive(false);
@@ -77,20 +90,43 @@ namespace BeeRun
         private void OnEndAnimationComplete()
         {
             float mult = GetCoinMultiplicator(FlowerCount);
-            CoinCount = Mathf.CeilToInt(CoinCount * mult);
-            OnCollected?.Invoke(CollectibleType.Coin);
+            int newCount = Mathf.CeilToInt(CoinCount * mult);
+            Collect(CollectibleType.Coin, newCount - CoinCount);
+
+            OnGameEnd?.Invoke(true);
         }
 
-        public void GameOver(bool won)
+        public void GameOver(bool won, GameEndAction endAction)
         {
+            if (State != GameState.Ending) return;
             State = GameState.Over;
-            UserManager.Instance.OnGameComplete(won, 1, CoinCount);
+
+            Debug.Log($"GameManager - GameOver() won={won} endAction={endAction}");
+
+            switch (endAction)
+            {
+                case GameEndAction.Exit:
+                    UserManager.Instance.OnGameComplete(won, 1, CoinCount);
+                    LevelManager.Instance.Load("home");
+                    break;
+                case GameEndAction.Retry:
+                    UserManager.Instance.OnGameComplete(won, 1, CoinCount);
+                    LevelManager.Instance.Restart();
+                    break;
+                case GameEndAction.Continue:
+                    State = GameState.Started;
+                    OnGameStart?.Invoke();
+                    playerController.Continue();
+                    break;
+            }
         }
 
         private void OnDestroy()
         {
             if (instance == this) instance = null;
             OnCollected = null;
+            OnGameEnd = null;
+            OnGameStart = null;
         }
 
         static public float GetCoinMultiplicator(int step)
@@ -99,6 +135,7 @@ namespace BeeRun
         }
     }
 
+    [Serializable]
     public enum GameState
     {
         Loading,
@@ -106,5 +143,13 @@ namespace BeeRun
         Started,
         Ending,
         Over
+    }
+
+    [Serializable]
+    public enum GameEndAction
+    {
+        Exit,
+        Retry,
+        Continue
     }
 }

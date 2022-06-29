@@ -13,6 +13,8 @@ namespace BeeRun
 
         private PlayerController controller;
 
+        private GameObject cocoon;
+
         private void Awake()
         {
             controller = GetComponent<PlayerController>();
@@ -30,13 +32,15 @@ namespace BeeRun
                     break;
                 case ObstacleBehaviour.Web:
                     Instantiate(webFXPrefab, fxParent, false);
-                    Instantiate(cocoonFXPrefab, fxParent, false);
+                    cocoon = Instantiate(cocoonFXPrefab, fxParent, false);
                     break;
             }
         }
 
         private void PlayHitFX(ObstacleBehaviour behaviour)
         {
+            CleanUpFX();
+
             switch (behaviour)
             {
                 case ObstacleBehaviour.Damage:
@@ -46,6 +50,12 @@ namespace BeeRun
                 case ObstacleBehaviour.Web:
                     break;
             }
+        }
+
+        private void CleanUpFX()
+        {
+            if (cocoon != null) Destroy(cocoon);
+            cocoon = null;
         }
     }
 }

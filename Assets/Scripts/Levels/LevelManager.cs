@@ -37,13 +37,12 @@ namespace BeeRun
 
         public void Load(string name, bool additive = false)
         {
-            Task.Run(() => LoadAsync(name, additive));
+            _ = LoadAsync(name, additive);
         }
 
         public async Task LoadAsync(string name, bool additive = false)
         {
             Level level = levels.FirstOrDefault(l => l.Name == name);
-            Debug.Log($"LevelManager - Load() {level}");
             if (level != null)
             {
                 if (!SceneManager.GetSceneByName(level.Scene).isLoaded)
@@ -62,6 +61,8 @@ namespace BeeRun
                 await Task.Delay((int)(delay * 1000));
             }
 
+            Debug.Log($"LevelManager - LoadSceneAsync() sceneName={sceneName} additive={additive}");
+
             // Load scene
             AsyncOperation op = SceneManager.LoadSceneAsync(sceneName, additive ? LoadSceneMode.Additive : LoadSceneMode.Single);
             while (!op.isDone)
@@ -72,11 +73,13 @@ namespace BeeRun
 
         public void Restart()
         {
-            Task.Run(() => RestartAsync());
+            Debug.Log($"LevelManager - Restart()");
+            _ = RestartAsync();
         }
 
         public async Task RestartAsync()
         {
+            Debug.Log($"LevelManager - RestartAsync() {SceneManager.GetActiveScene().name}");
             await LoadSceneAsync(SceneManager.GetActiveScene().name, false);
         }
     }
