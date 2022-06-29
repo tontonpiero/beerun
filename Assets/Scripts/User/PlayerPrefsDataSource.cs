@@ -16,7 +16,7 @@ namespace BeeRun
         public async Task<T> LoadData()
         {
             string strData = PlayerPrefs.GetString(key, null);
-            Debug.Log($"PlayerPrefsDataSource - LoadData() {strData}");
+            //Debug.Log($"PlayerPrefsDataSource - LoadData() {strData}");
             if (string.IsNullOrEmpty(strData)) return default;
             await Task.Yield();
             try
@@ -32,7 +32,7 @@ namespace BeeRun
         public void SaveData(T data)
         {
             string strData = JsonUtility.ToJson(data);
-            Debug.Log($"PlayerPrefsDataSource - SaveData() {strData}");
+            //Debug.Log($"PlayerPrefsDataSource - SaveData() {strData}");
             PlayerPrefs.SetString(key, strData);
         }
     }

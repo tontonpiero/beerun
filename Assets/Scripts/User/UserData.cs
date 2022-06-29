@@ -14,6 +14,9 @@ namespace BeeRun
         // progress
         public int MaxLevel;
 
+        // customization
+        public int SkinIndex;
+
         // stats
         public int AppLaunchCount;
         public int GameStartedCount;

@@ -43,9 +43,20 @@ namespace BeeRun
         public int Coins => userData.Coins;
         public int MaxLevel => userData.MaxLevel;
         public int NextLevel => userData.MaxLevel + 1;
+        public int SkinIndex => userData.SkinIndex;
+
+        private void EnsureInitialization()
+        {
+            if (!isInitialized)
+            {
+                _ = Initialize();
+            }
+        }
 
         public void OnAppLaunched()
         {
+            EnsureInitialization();
+
             userData.AppLaunchCount++;
 
             SaveData();
@@ -53,12 +64,17 @@ namespace BeeRun
 
         public void OnGameStarted()
         {
+            EnsureInitialization();
+
             userData.GameStartedCount++;
+
             SaveData();
         }
 
         public void OnGameComplete(bool won, int level, int coinsEarned)
         {
+            EnsureInitialization();
+
             if (won)
             {
                 userData.GameWonCount++;
@@ -69,6 +85,15 @@ namespace BeeRun
             }
             userData.Coins += coinsEarned;
             userData.MaxLevel = Math.Max(level, userData.MaxLevel);
+
+            SaveData();
+        }
+
+        public void SetSkin(int skinIndex)
+        {
+            EnsureInitialization();
+
+            userData.SkinIndex = skinIndex;
 
             SaveData();
         }
